@@ -29,66 +29,53 @@
     </form>
 
     <script>
-        const LINE_ACCESS_TOKEN = "VPI15bRAuAzGunrudPQsZ4gT0tL2BOIkO/qju+t3/4gkDcw+nx1JBS5BNMkhgfG/PIHvVNY8xZMzA/REz4ycMY l6DreoDD5uLh0OcSUwepfJ88Wl5nIUCtKzFJPnNplixXOp4LjVpSqwHip9vk/CWAdB04t89/1O/w1cDnyilFU=";  
-        const ADMIN_USER_ID = "Ub6bb0555e1a66d109de7d7ccdc7c8091";  // 你的管理員 User ID
+        // 您的 Google Apps Script 部署的 Web 應用程式 URL
+        const FORM_URL = 'https://script.google.com/macros/s/AKfycby9YLMglfFxZQ0_TjfWGj7BDRti8TXJnXUebrty6t7VLBk8qlDmkbEGb1X3Pwxnxjftog/exec'; // 替換為您的 URL
 
-        async function initLiff() {
-            try {
-                await liff.init({ liffId: "2007183553-2Y7WQ8vj" });  // 這裡仍然需要 LIFF ID
-                console.log("LIFF 初始化成功");
-            } catch (error) {
-                console.error("LIFF 初始化錯誤:", error);
-            }
-        }
-
-        function submitLeave() {
+        async function submitLeave() {
             // 獲取表單資料
             const name = document.getElementById("name").value;
             const date = document.getElementById("date").value;
             const grade = document.getElementById("grade").value;
             const reason = document.getElementById("reason").value;
 
-            // 設置請假訊息內容
-            let msg = `請假申請\n姓名: ${name}\n日期: ${date}\n年級: ${grade}\n請假事由: ${reason}`;
+            // 檢查資料是否填寫完整
+            if (!name || !date || !grade || !reason) {
+                alert("請完成所有欄位");
+                return;
+            }
 
-            // 發送請假訊息給管理員
-            sendLineMessage(msg);
+            // 構建 JSON 資料
+            const formData = {
+                name: name,
+                date: date,
+                grade: grade,
+                reason: reason
+            };
 
-            // 提交完成後的提示
-            alert("請假申請已提交！");
+            try {
+                // 使用 fetch 發送資料到 Google Apps Script
+                const response = await fetch(FORM_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // 解析回應
+                const result = await response.text();
+                alert(result); // 顯示從 Google Apps Script 回傳的訊息
+            } catch (error) {
+                console.error('Error submitting the form:', error);
+                alert('發送請假申請失敗！');
+            }
 
             // 清空表單
             document.getElementById("leaveForm").reset();
         }
-
-    function sendLineMessage(message) {
-        fetch("https://api.line.me/v2/bot/message/push", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${LINE_ACCESS_TOKEN}`
-            },
-            body: JSON.stringify({
-                to: ADMIN_USER_ID,
-                messages: [{ type: "text", text: message }]
-            })
-        })
-        .then(response => response.text())  // 先轉成 text，看看回應內容
-        .then(data => {
-            console.log("API 回應：", data);  // 顯示完整回應
-            alert("API 回應：" + data);  // 讓你直接看到錯誤訊息
-        })
-        .catch(error => {
-            console.error("發送請求時發生錯誤：", error);
-            alert("發送訊息失敗：" + error);
-        });
-    }
-
-
-
-
-        // 初始化 LIFF（不強制登入）
-        initLiff();
     </script>
 </body>
 </html>
+
+
