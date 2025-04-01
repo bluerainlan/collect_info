@@ -29,8 +29,9 @@
     </form>
 
     <script>
-        // 設定 Google Apps Script 部署的 Web App URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9YLMglfFxZQ0_TjfWGj7BDRti8TXJnXUebrty6t7VLBk8qlDmkbEGb1X3Pwxnxjftog/exec';  // 用你自己的 Web App URL 替換
+        const LINE_ACCESS_TOKEN = "VPI15bRAuAzGunrudPQsZ4gT0tL2BOIkO/qju+t3/4gkDcw+nx1JBS5BNMkhgfG/PIHvVNY8xZMzA/REz4ycMYl6DreoDD5uLh0OcSUwepfJ88Wl5nIUCtKzFJPnNplixXOp4LjVpSqwHip9vk/CWAdB04t89/1O/w1cDnyilFU=";
+        const ADMIN_USER_ID = "Ub6bb0555e1a66d109de7d7ccdc7c8091";  // 你的管理員 User ID
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9YLMglfFxZQ0_TjfWGj7BDRti8TXJnXUebrty6t7VLBk8qlDmkbEGb1X3Pwxnxjftog/exec'; // 填入你部署後的 Google Script URL
 
         async function submitLeave() {
             // 獲取表單資料
@@ -39,25 +40,31 @@
             const grade = document.getElementById("grade").value;
             const reason = document.getElementById("reason").value;
 
-            // 使用 fetch 發送 POST 請求
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: name,
-                    date: date,
-                    grade: grade,
-                    reason: reason,
-                })
-            });
+            // 準備要傳送的資料
+            const formData = {
+                name: name,
+                date: date,
+                grade: grade,
+                reason: reason
+            };
 
-            const result = await response.text();
-            alert(result);  // 顯示返回的訊息
-            document.getElementById("leaveForm").reset();  // 清空表單
+            try {
+                // 發送資料到 Google Apps Script
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.text();
+                alert(result);  // 顯示結果
+            } catch (error) {
+                alert("請假申請失敗，請稍後再試！");
+                console.error(error);
+            }
         }
     </script>
 </body>
 </html>
-
