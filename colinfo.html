@@ -32,6 +32,7 @@
         const LINE_ACCESS_TOKEN = "VPI15bRAuAzGunrudPQsZ4gT0tL2BOIkO/qju+t3/4gkDcw+nx1JBS5BNMkhgfG/PIHvVNY8xZMzA/REz4ycMYl6DreoDD5uLh0OcSUwepfJ88Wl5nIUCtKzFJPnNplixXOp4LjVpSqwHip9vk/CWAdB04t89/1O/w1cDnyilFU=";  // 填入你的 LINE Bot Token
         const ADMIN_USER_ID = "Ub6bb0555e1a66d109de7d7ccdc7c8091";  // 填入管理員的 User ID
 
+        // 初始化 LIFF
         async function initLiff() {
             await liff.init({ liffId: "2007183553-2Y7WQ8vj" });
             if (!liff.isLoggedIn()) {
@@ -40,22 +41,33 @@
         }
 
         async function submitLeave() {
+            // 確保用戶登入
+            if (!liff.isLoggedIn()) {
+                alert("請先登入 LINE 以提交請假申請");
+                return;
+            }
+
+            // 獲取表單資料
             const name = document.getElementById("name").value;
             const date = document.getElementById("date").value;
             const grade = document.getElementById("grade").value;
             const reason = document.getElementById("reason").value;
-            
+
+            // 獲取使用者 LINE ID
             const userId = liff.getDecodedIDToken()?.sub || "未知使用者";
 
+            // 設置請假訊息內容
             const leaveMessage = `📌 **請假申請**\n👤 姓名：${name}\n📅 日期：${date}\n🎓 年級：${grade}\n📝 事由：${reason}\n🔗 申請人 LINE ID: ${userId}`;
 
             // 發送請假訊息給管理員
             sendLineMessage(leaveMessage);
 
+            // 提交完成後的提示
             alert("請假申請已提交！");
-            liff.closeWindow();
+            liff.closeWindow();  // 關閉 LIFF 視窗
         }
 
+        // 發送訊息給 LINE 管理員
         function sendLineMessage(message) {
             fetch("https://api.line.me/v2/bot/message/push", {
                 method: "POST",
@@ -72,6 +84,7 @@
               .catch(error => console.error("錯誤", error));
         }
 
+        // 初始化 LIFF
         initLiff();
     </script>
 </body>
