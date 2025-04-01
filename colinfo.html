@@ -29,8 +29,8 @@
     </form>
 
     <script>
-        // 您的 Google Apps Script 部署的 Web 應用程式 URL
-        const FORM_URL = 'https://script.google.com/macros/s/AKfycby9YLMglfFxZQ0_TjfWGj7BDRti8TXJnXUebrty6t7VLBk8qlDmkbEGb1X3Pwxnxjftog/exec'; // 替換為您的 URL
+        // 設定 Google Apps Script 部署的 Web App URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9YLMglfFxZQ0_TjfWGj7BDRti8TXJnXUebrty6t7VLBk8qlDmkbEGb1X3Pwxnxjftog/exec';  // 用你自己的 Web App URL 替換
 
         async function submitLeave() {
             // 獲取表單資料
@@ -39,43 +39,25 @@
             const grade = document.getElementById("grade").value;
             const reason = document.getElementById("reason").value;
 
-            // 檢查資料是否填寫完整
-            if (!name || !date || !grade || !reason) {
-                alert("請完成所有欄位");
-                return;
-            }
+            // 使用 fetch 發送 POST 請求
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    date: date,
+                    grade: grade,
+                    reason: reason,
+                })
+            });
 
-            // 構建 JSON 資料
-            const formData = {
-                name: name,
-                date: date,
-                grade: grade,
-                reason: reason
-            };
-
-            try {
-                // 使用 fetch 發送資料到 Google Apps Script
-                const response = await fetch(FORM_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                // 解析回應
-                const result = await response.text();
-                alert(result); // 顯示從 Google Apps Script 回傳的訊息
-            } catch (error) {
-                console.error('Error submitting the form:', error);
-                alert('發送請假申請失敗！');
-            }
-
-            // 清空表單
-            document.getElementById("leaveForm").reset();
+            const result = await response.text();
+            alert(result);  // 顯示返回的訊息
+            document.getElementById("leaveForm").reset();  // 清空表單
         }
     </script>
 </body>
 </html>
-
 
