@@ -29,11 +29,11 @@
     </form>
 
     <script>
-        const LINE_ACCESS_TOKEN = "你的 Channel Access Token";  // 填入你的 LINE Bot Token
-        const ADMIN_USER_ID = "管理員的 User ID";  // 填入管理員的 User ID
+        const LINE_ACCESS_TOKEN = "VPI15bRAuAzGunrudPQsZ4gT0tL2BOIkO/qju+t3/4gkDcw+nx1JBS5BNMkhgfG/PIHvVNY8xZMzA/REz4ycMYl6DreoDD5uLh0OcSUwepfJ88Wl5nIUCtKzFJPnNplixXOp4LjVpSqwHip9vk/CWAdB04t89/1O/w1cDnyilFU=";  // 填入你的 LINE Bot Token
+        const ADMIN_USER_ID = "Ub6bb0555e1a66d109de7d7ccdc7c8091";  // 填入管理員的 User ID
 
         async function initLiff() {
-            await liff.init({ liffId: "你的 LIFF ID" });
+            await liff.init({ liffId: "2007183553-2Y7WQ8vj" });
             if (!liff.isLoggedIn()) {
                 liff.login();
             }
