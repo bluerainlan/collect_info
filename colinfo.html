@@ -64,7 +64,9 @@
 
             // 提交完成後的提示
             alert("請假申請已提交！");
-            liff.closeWindow();  // 關閉 LIFF 視窗
+
+            // 清空表單
+            document.getElementById("leaveForm").reset();
         }
 
         // 發送訊息給 LINE 管理員
