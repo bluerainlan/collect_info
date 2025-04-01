@@ -34,9 +34,13 @@
 
         // 初始化 LIFF
         async function initLiff() {
-            await liff.init({ liffId: "2007183553-2Y7WQ8vj" });
-            if (!liff.isLoggedIn()) {
-                liff.login();
+            try {
+                await liff.init({ liffId: "2007183553-2Y7WQ8vj" });
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error("LIFF 初始化錯誤:", error);
             }
         }
 
@@ -57,10 +61,15 @@
             const userId = liff.getDecodedIDToken()?.sub || "未知使用者";
 
             // 設置請假訊息內容
-            const leaveMessage = `📌 **請假申請**\n👤 姓名：${name}\n📅 日期：${date}\n🎓 年級：${grade}\n📝 事由：${reason}\n🔗 申請人 LINE ID: ${userId}`;
+            let msg = "";
+            msg = msg + name + "/";  // 姓名
+            msg = msg + date + "/";  // 日期
+            msg = msg + grade + "/"; // 年級
+            msg = msg + reason + "/";  // 請假事由
+            msg = msg + userId;  // 用戶 ID
 
             // 發送請假訊息給管理員
-            sendLineMessage(leaveMessage);
+            sendLineMessage(msg);
 
             // 提交完成後的提示
             alert("請假申請已提交！");
@@ -83,7 +92,10 @@
                 })
             }).then(response => response.json())
               .then(data => console.log("訊息發送成功", data))
-              .catch(error => console.error("錯誤", error));
+              .catch(error => {
+                  console.error("錯誤", error);
+                  alert("發送訊息失敗！");
+              });
         }
 
         // 初始化 LIFF
