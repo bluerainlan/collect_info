@@ -29,13 +29,13 @@
     </form>
 
     <script>
-        const LINE_ACCESS_TOKEN = "VPI15bRAuAzGunrudPQsZ4gT0tL2BOIkO/qju+t3/4gkDcw+nx1JBS5BNMkhgfG/PIHvVNY8xZMzA/REz4ycMYl6DreoDD5uLh0OcSUwepfJ88Wl5nIUCtKzFJPnNplixXOp4LjVpSqwHip9vk/CWAdB04t89/1O/w1cDnyilFU=";  // 填入你的 LINE Bot Token
-        const ADMIN_USER_ID = "Ub6bb0555e1a66d109de7d7ccdc7c8091";  // 填入管理員的 User ID
+        const LINE_ACCESS_TOKEN = " 填入你的 LINE Bot Token ";  // 填入你的 LINE Bot Token
+        const ADMIN_USER_ID = "填入管理員的 User ID";  // 填入管理員的 User ID
 
         // 初始化 LIFF
         async function initLiff() {
             try {
-                await liff.init({ liffId: "2007183553-2Y7WQ8vj" });
+                await liff.init({ liffId: "填入管理員的 liff ID" });
                 if (!liff.isLoggedIn()) {
                     liff.login();
                 }
