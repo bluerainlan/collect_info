@@ -29,13 +29,14 @@
     </form>
 
     <script>
-        const LINE_ACCESS_TOKEN = " 填入你的 LINE Bot Token ";  // 填入你的 LINE Bot Token
-        const ADMIN_USER_ID = "填入管理員的 User ID";  // 填入管理員的 User ID
+        const LINE_ACCESS_TOKEN = "VPI15bRAuAzGunrudPQsZ4gT0tL2BOIkO/qju+t3/4gkDcw+nx1JBS5BNMkhgfG/PIHvVNY8xZMzA/REz4ycMYl6DreoDD5uLh0OcSUwepfJ88Wl5nIUCtKzFJPnNplixXOp4LjVpSqwHip9vk/CWAdB04t89/1O/w1cDnyilFU=";  // 這是 LINE Messaging API 的 Token
+        const ADMIN_USER_ID = "Ub6bb0555e1a66d109de7d7ccdc7c8091";  // 填入管理員的 User ID
 
         // 初始化 LIFF
         async function initLiff() {
             try {
-                await liff.init({ liffId: "填入管理員的 liff ID" });
+                // 初始化 LIFF，填入你的 LIFF ID
+                await liff.init({ liffId: "2007183553-2Y7WQ8vj" });
                 if (!liff.isLoggedIn()) {
                     liff.login();
                 }
@@ -45,7 +46,7 @@
         }
 
         async function submitLeave() {
-            // 確保用戶登入
+            // 確保用戶已經登入 LINE
             if (!liff.isLoggedIn()) {
                 alert("請先登入 LINE 以提交請假申請");
                 return;
@@ -57,18 +58,18 @@
             const grade = document.getElementById("grade").value;
             const reason = document.getElementById("reason").value;
 
-            // 獲取使用者 LINE ID
-            const userId = liff.getDecodedIDToken()?.sub || "未知使用者";
+            // 獲取用戶的 LINE ID
+            const userId = liff.getDecodedIDToken()?.sub || "未知使用者";  // 請確保此處獲得正確的 LINE 用戶 ID
 
-            // 設置請假訊息內容
+            // 組裝訊息
             let msg = "";
-            msg = msg + name + "/";  // 姓名
-            msg = msg + date + "/";  // 日期
-            msg = msg + grade + "/"; // 年級
-            msg = msg + reason + "/";  // 請假事由
-            msg = msg + userId;  // 用戶 ID
+            msg += `姓名: ${name}\n`;  // 姓名
+            msg += `日期: ${date}\n`;  // 日期
+            msg += `年級: ${grade}\n`; // 年級
+            msg += `請假事由: ${reason}\n`;  // 請假事由
+            msg += `用戶 ID: ${userId}`;  // 用戶的 LINE ID
 
-            // 發送請假訊息給管理員
+            // 發送訊息給管理員
             sendLineMessage(msg);
 
             // 提交完成後的提示
@@ -80,27 +81,29 @@
 
         // 發送訊息給 LINE 管理員
         function sendLineMessage(message) {
-    fetch("https://api.line.me/v2/bot/message/push", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${LINE_ACCESS_TOKEN}`
-        },
-        body: JSON.stringify({
-            to: ADMIN_USER_ID,
-            messages: [{ type: "text", text: message }]
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("訊息發送成功", data);
-    })
-    .catch(error => {
-        console.error("發送訊息失敗", error);
-        alert("發送訊息失敗！");
-    });
-}
-
+            fetch("https://api.line.me/v2/bot/message/push", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${LINE_ACCESS_TOKEN}`
+                },
+                body: JSON.stringify({
+                    to: ADMIN_USER_ID,  // 管理員的 User ID
+                    messages: [{
+                        type: "text",
+                        text: message
+                    }]
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("訊息發送成功", data);
+            })
+            .catch(error => {
+                console.error("發送訊息失敗", error);
+                alert("發送訊息失敗！");
+            });
+        }
 
         // 初始化 LIFF
         initLiff();
