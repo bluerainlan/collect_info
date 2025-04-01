@@ -61,7 +61,7 @@
             document.getElementById("leaveForm").reset();
         }
 
-        function sendLineMessage(message) {
+function sendLineMessage(message) {
     fetch("https://api.line.me/v2/bot/message/push", {
         method: "POST",
         headers: {
@@ -73,21 +73,23 @@
             messages: [{ type: "text", text: message }]
         })
     })
-    .then(response => response.json())
+    .then(response => response.json()) 
     .then(data => {
-        console.log("API 回應：", data);
+        console.log("API 回應：", data);  // 顯示完整回應
         if (data.message) {
-            console.error("發送訊息失敗，錯誤訊息：", data.message);
+            console.error("錯誤：", data.message);
             alert("發送訊息失敗：" + data.message);
         } else {
             console.log("訊息發送成功", data);
+            alert("訊息已成功發送！");
         }
     })
     .catch(error => {
-        console.error("發送訊息錯誤", error);
+        console.error("發送請求時發生錯誤：", error);
         alert("發送訊息失敗：" + error);
     });
 }
+
 
 
         // 初始化 LIFF（不強制登入）
