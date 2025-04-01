@@ -80,23 +80,27 @@
 
         // 發送訊息給 LINE 管理員
         function sendLineMessage(message) {
-            fetch("https://api.line.me/v2/bot/message/push", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${LINE_ACCESS_TOKEN}`
-                },
-                body: JSON.stringify({
-                    to: ADMIN_USER_ID,
-                    messages: [{ type: "text", text: message }]
-                })
-            }).then(response => response.json())
-              .then(data => console.log("訊息發送成功", data))
-              .catch(error => {
-                  console.error("錯誤", error);
-                  alert("發送訊息失敗！");
-              });
-        }
+    fetch("https://api.line.me/v2/bot/message/push", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${LINE_ACCESS_TOKEN}`
+        },
+        body: JSON.stringify({
+            to: ADMIN_USER_ID,
+            messages: [{ type: "text", text: message }]
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("訊息發送成功", data);
+    })
+    .catch(error => {
+        console.error("發送訊息失敗", error);
+        alert("發送訊息失敗！");
+    });
+}
+
 
         // 初始化 LIFF
         initLiff();
